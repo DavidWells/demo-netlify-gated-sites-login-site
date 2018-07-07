@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
+import queryString from 'query-string'
 import netlifyIdentity from 'netlify-identity-widget'
+import logo from './logo.svg'
 import './App.css'
+
+const REDIRECT_URL = 'redirect_url'
 
 class App extends Component {
   constructor() {
@@ -10,12 +13,19 @@ class App extends Component {
     netlifyIdentity.init()
   }
   componentDidMount() {
+    const parsed = queryString.parse(location.search)
+    // Set redirect URL
+    if (parsed.site) {
+      localStorage.setItem(REDIRECT_URL, parsed.site)
+    }
      /* Register listeners on identity widget events */
     netlifyIdentity.on("login", (user) => {
       /* Close netlify identity modal on login */
       netlifyIdentity.close()
       console.log('login complete', user)
       // refresh page
+      const redirect_url = localStorage.getItem(REDIRECT_URL)
+      console.log('Redirect', redirect_url)
       // window.location.href = window.location.href
     })
     netlifyIdentity.on("logout", () => {
