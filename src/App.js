@@ -107,3 +107,7 @@ function getParams(url) {
   }
   return urlParams
 }
+
+function decode(s) {
+  return decodeURIComponent(s).replace(/\+/g, ' ')
+}
