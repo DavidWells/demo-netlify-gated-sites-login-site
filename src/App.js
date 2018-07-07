@@ -25,7 +25,7 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      window.location.href = window.location.href
+      window.location.href = `https://gated-sites-demo-login-site.netlify.com/.netlify/functions/handle-login?url=${redirect_url}`
     })
     netlifyIdentity.on("logout", () => {
       // clear redirectURL
