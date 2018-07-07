@@ -26,7 +26,7 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      // window.location.href = window.location.href
+      window.location.href = window.location.href
     })
     netlifyIdentity.on("logout", () => {
       // clear redirectURL
