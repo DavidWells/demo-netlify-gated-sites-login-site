@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "jsonwebtoken": "^8.3.0",
     "netlify-identity-widget": "^1.4.14",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -10,7 +11,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "buildFunctions": "netlify-lambda build functions",
+    "build": "npm run buildFunctions && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

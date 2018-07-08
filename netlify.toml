@@ -4,4 +4,4 @@
   # This is the directory is publishing to netlify's CDN
   publish = "build"
   # Location of built function code
-  functions = "functions"
+  functions = "functions-build"

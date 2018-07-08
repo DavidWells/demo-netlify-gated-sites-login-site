@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken'
+
+
 // Set cookie
 
 /*
@@ -14,6 +17,17 @@ http.Cookie{
 
 exports.handler = (event, context, callback) => {
 
+  const identity = context.clientContext && context.clientContext.identity
+  const decoded = jwt.verify(identity.token, 'secret');
+  console.log('decoded', decoded) // bar
+
+  // const claims = context.clientContext && context.clientContext.user;
+  // if (!claims) {
+  //   return callback(null, {
+  //     statusCode: 401,
+  //     body: "You must be signed in to call this function"
+  //   });
+  // }
   // 1. Read JWT
 
   // 2. Validate User
@@ -24,7 +38,8 @@ exports.handler = (event, context, callback) => {
     statusCode: 200,
     body: JSON.stringify({
     	event: event,
-      context: context
+      context: context,
+      decoded: decoded
     })
   })
 }
