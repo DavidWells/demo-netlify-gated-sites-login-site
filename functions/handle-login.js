@@ -16,7 +16,7 @@ http.Cookie{
 */
 
 exports.handler = (event, context, callback) => {
-
+  console.log('context', context)
   const identity = context.clientContext && context.clientContext.identity
   let decoded
   try {

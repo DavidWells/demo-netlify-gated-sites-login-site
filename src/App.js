@@ -25,7 +25,10 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      window.location.href = `https://gated-sites-demo-login-site.netlify.com/.netlify/functions/handle-login?url=${redirect_url}`
+      doLogin(redirect_url).then((data) => {
+        console.log('done', data)
+      })
+      //window.location.href = `https://gated-sites-demo-login-site.netlify.com/.netlify/functions/handle-login?url=${redirect_url}`
     })
     netlifyIdentity.on("logout", () => {
       // reload page
@@ -69,6 +72,36 @@ export default class App extends Component {
       </div>
     )
   }
+}
+
+function doLogin(redirect_url) {
+  return generateHeaders().then((headers) => {
+    return fetch('/.netlify/functions/handle-login', {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        text: 'hi',
+        url: redirect_url
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(err => { throw(err) })
+      }
+    })
+    .then((data) => console.log('data', data))
+    .catch((err) => console.log('err', err))
+  });
+}
+
+function generateHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  if (netlifyIdentity.currentUser()) {
+    return netlifyIdentity.currentUser().jwt().then((token) => {
+      return { ...headers, Authorization: `Bearer ${token}` };
+    })
+  }
+  return Promise.resolve(headers);
 }
 
 function getParams(url) {
