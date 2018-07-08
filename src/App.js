@@ -88,9 +88,8 @@ function doLogin(redirect_url) {
       if (!response.ok) {
         return response.text().then(err => { throw(err) })
       }
-      return response
+      return response.json()
     })
-    .then((data) => console.log('data', data))
     .catch((err) => console.log('err', err))
   });
 }
