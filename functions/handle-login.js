@@ -18,8 +18,14 @@ http.Cookie{
 exports.handler = (event, context, callback) => {
 
   const identity = context.clientContext && context.clientContext.identity
-  const decoded = jwt.verify(identity.token, 'secret');
-  console.log('decoded', decoded) // bar
+  let decoded
+  try {
+    decoded = jwt.verify(identity.token, 'secret')
+    console.log('decoded', decoded) // bar
+  } catch (e) {
+    console.log(e)
+  }
+
 
   // const claims = context.clientContext && context.clientContext.user;
   // if (!claims) {
