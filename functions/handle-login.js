@@ -18,6 +18,16 @@ http.Cookie{
 exports.handler = (event, context, callback) => {
   console.log('context', context)
   console.log('event.headers', event.headers)
+  console.log('claims', claims)
+  if (!event.headers.authorization) {
+    console.log('event.headers.authorization missing')
+    return callback(null, {
+      statusCode: 401,
+      body: "You must be signed in to call this function"
+    })
+  }
+  const authToken = event.headers.authorization.substring(7)
+
   const claims = context.clientContext && context.clientContext.user;
   if (!claims) {
     return callback(null, {
@@ -25,22 +35,30 @@ exports.handler = (event, context, callback) => {
       body: "You must be signed in to call this function"
     });
   }
-  let decoded
-  // try {
-  //   decoded = jwt.verify(identity.token, 'secret')
-  //   console.log('decoded', decoded) // bar
-  // } catch (e) {
-  //   console.log(e)
-  // }
 
+  let decodedToken
+  try {
+    decodedToken = jwt.decode(authToken, { complete: true })
+    console.log('decodedToken', decodedToken) // bar
+  } catch (e) {
+    console.log(e)
+  }
 
-  // const claims = context.clientContext && context.clientContext.user;
-  // if (!claims) {
-  //   return callback(null, {
-  //     statusCode: 401,
-  //     body: "You must be signed in to call this function"
-  //   });
-  // }
+  // invalid token - synchronous
+  try {
+    var valid = jwt.verify(authToken, 'secret');
+    console.log('valid')
+  } catch(err) {
+    console.log('verify error', err)
+    /*
+      err = {
+        name: 'TokenExpiredError',
+        message: 'jwt expired',
+        expiredAt: 1408621000
+      }
+    */
+  }
+
   // 1. Read JWT
 
   // 2. Validate User
@@ -52,7 +70,7 @@ exports.handler = (event, context, callback) => {
     body: JSON.stringify({
     	event: event,
       context: context,
-      decoded: decoded
+      decoded: decodedToken
     })
   })
 }
