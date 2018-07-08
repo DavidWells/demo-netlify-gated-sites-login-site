@@ -18,7 +18,7 @@ http.Cookie{
 exports.handler = (event, context, callback) => {
   console.log('context', context)
   console.log('event.headers', event.headers)
-  console.log('claims', claims)
+
   if (!event.headers.authorization) {
     console.log('event.headers.authorization missing')
     return callback(null, {
@@ -29,6 +29,7 @@ exports.handler = (event, context, callback) => {
   const authToken = event.headers.authorization.substring(7)
 
   const claims = context.clientContext && context.clientContext.user;
+  console.log('claims', claims)
   if (!claims) {
     return callback(null, {
       statusCode: 401,
