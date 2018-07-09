@@ -67,12 +67,7 @@ exports.handler = (event, context, callback) => {
 
 
   if (user) {
-    var now = new Date();
-    var time = now.getTime();
-    time += 3600 * 1000;
-    now.setTime(time);
-    const expiresValue = now.toGMTString()
-    console.log('expiresValue', expiresValue)
+
     const myCookie = cookie.serialize('nf_jwt', authToken, {
       secure: true,
       httpOnly: true,

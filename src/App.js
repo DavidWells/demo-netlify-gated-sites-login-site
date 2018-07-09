@@ -27,8 +27,9 @@ export default class App extends Component {
       console.log('Redirect', redirect_url)
       doLogin(redirect_url).then((data) => {
         console.log('done', data)
+        debugger
+        window.location.href = `${REDIRECT_URL}/.netlify/functions/auth?token=what`
       })
-      //window.location.href = `https://gated-sites-demo-login-site.netlify.com/.netlify/functions/handle-login?url=${redirect_url}`
     })
     netlifyIdentity.on("logout", () => {
       // reload page
