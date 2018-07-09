@@ -30,6 +30,8 @@ exports.handler = (event, context, callback) => {
 
   // Make new token
   var newToken = jwt.sign({
+    sub: decodedToken.sub,
+    exp: decodedToken.exp,
     "app_metadata": {
       "authorization": {
         "roles": ["admin", "editor"]
