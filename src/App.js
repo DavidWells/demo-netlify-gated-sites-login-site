@@ -3,6 +3,8 @@ import netlifyIdentity from 'netlify-identity-widget'
 import logo from './logo.svg'
 import './App.css'
 
+window.netlifyIdentity = netlifyIdentity
+
 const REDIRECT_URL = 'redirect_url'
 
 export default class App extends Component {
