@@ -90,7 +90,7 @@ exports.handler = (event, context, callback) => {
       },
       "body": "..."
     }
-    console.log('cookieResponse', cookieResponsecookieResponse)
+    console.log('cookieResponse', cookieResponse)
 
     return callback(null, cookieResponse);
   }
