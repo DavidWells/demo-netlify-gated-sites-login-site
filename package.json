@@ -14,6 +14,7 @@
     "start": "react-scripts start",
     "buildFunctions": "netlify-lambda build functions",
     "build": "npm run buildFunctions && react-scripts build",
+    "postbuild": "cp ./src/_redirects build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
