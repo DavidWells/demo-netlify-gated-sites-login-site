@@ -1,4 +1,4 @@
-const fetch = require("node-fetch")
+import fetch from "node-fetch"
 
 class IdentityAPI {
   constructor(apiURL, token) {
@@ -96,7 +96,7 @@ export function handler(event, context, callback) {
             console.log('failed updating user')
             return callback(null, { statusCode: 500, body: "Internal Server Error: " + e });
           })
-          
+
       } catch (e) {
         callback(null, { statusCode: 500, body: "Internal Server Error: " + e });
       }
