@@ -32,7 +32,7 @@ export default class App extends Component {
         alert('No redirect url set')
         return false
       }
-      const useGET = false
+      const useGET = true
       if (useGET) {
         window.location.href = `/.netlify/functions/handle-login-get?url=${redirect_url}&token=${user.token.access_token}`
       } else {
