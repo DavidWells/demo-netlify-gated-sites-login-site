@@ -84,8 +84,22 @@ export default class App extends Component {
        </div>
        <div>
         <h2>Sites</h2>
-          <a href='https://gated-sites-demo-site1.netlify.com/'>site1</a><br/>
-          <a href='https://gated-sites-demo-site2.netlify.com/'>site2</a><br/>
+          <div>
+            <a href='https://gated-sites-demo-site1.netlify.com/'>
+              Visit site 1
+            </a>
+            <div onClick={() => { removeCookie('https://gated-sites-demo-site1.netlify.com/') }}>
+              site 1 removeCookie
+            </div>
+          </div>
+          <div>
+            <a href='https://gated-sites-demo-site2.netlify.com/'>
+              Visit site 2
+            </a>
+            <div onClick={() => { removeCookie('https://gated-sites-demo-site2.netlify.com/') }}>
+              site 2 removeCookie
+            </div>
+          </div>
        </div>
       </div>
     )
@@ -94,6 +108,14 @@ export default class App extends Component {
 
 function doRedirect(url, token) {
   window.location.href = `/.netlify/functions/handle-login-get?url=${url}&token=${token}`
+}
+
+function removeCookie(url) {
+  window.location.href = `${url}/.netlify/functions/delete-cookie`
+}
+
+function setCookie(url, token) {
+  window.location.href = `${url}/.netlify/functions/delete-cookie`
 }
 
 /* Not in use
