@@ -64,7 +64,7 @@ export default class App extends Component {
     }
     return (
       <button onClick={this.handleLogOut}>
-        Log out { user.email }
+        Log out {user.email}
       </button>
     )
   }
@@ -74,7 +74,9 @@ export default class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Login Site</h1>
+          <h1 className="App-title">
+            Login Site
+          </h1>
         </header>
         <br />
         <div>
