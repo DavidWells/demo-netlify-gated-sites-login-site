@@ -19,10 +19,38 @@ exports.handler = (event, context, callback) => {
   const body = event.body ? JSON.parse(event.body) : {}
   const { identity, user } = context.clientContext;
   const params = event.queryStringParameters
+
+  let decodedToken
+  try {
+    decodedToken = jwt.decode(params.token, { complete: true })
+    console.log('decodedToken', decodedToken)
+  } catch (e) {
+    console.log(e)
+  }
+
+  // Make new token
+  var newToken = jwt.sign({
+    "app_metadata": {
+      "authorization": {
+        "roles": ["admin", "editor"]
+      }
+    }
+  }, 'secret');
+
+  console.log('newToken', newToken)
+  /*
+  {
+    "app_metadata": {
+      "authorization": {
+        "roles": ["admin", "editor"]
+      }
+    }
+  }*/
+
   const response = {
     statusCode: 301,
     headers: {
-      Location: `${params.url}.netlify/functions/auth-two?token=${params.token}`,
+      Location: `${params.url}.netlify/functions/auth-two?token=${newToken}`,
       // Set no cache
       'Cache-Control': 'no-cache'
     }
@@ -51,13 +79,7 @@ exports.handler = (event, context, callback) => {
     });
   }
 
-  let decodedToken
-  try {
-    decodedToken = jwt.decode(authToken, { complete: true })
-    console.log('decodedToken', decodedToken)
-  } catch (e) {
-    console.log(e)
-  }
+
 
   // invalid token - synchronous
   try {
