@@ -77,7 +77,8 @@ exports.handler = (event, context, callback) => {
       secure: true,
       httpOnly: true,
       path: "/",
-      expires: expiresValue
+      maxAge: 60 * 60 * 24 * 7
+      //expires: expiresValue
     })
 
     // var cookieString = "myCookie="+cookieVal+"; domain=my.domain; expires="+date.toGMTString()+";";
