@@ -1,2 +1,2 @@
-/admin/*	200!	Role=admin
-/admin/*	/login	401!
+/admin.html	200!	Role=admin
+/admin.html	/login.html	401!
