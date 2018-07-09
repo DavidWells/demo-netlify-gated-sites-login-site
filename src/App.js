@@ -21,7 +21,7 @@ export default class App extends Component {
     netlifyIdentity.on("init", user => {
       if (user && redirectUrl) {
         console.log('user', user)
-        doRedirect(redirectUrl, user.token.access_token)
+        // doRedirect(redirectUrl, user.token.access_token)
       }
     })
     netlifyIdentity.init()
