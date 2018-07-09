@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-
+import cookie from 'cookie'
 
 // Set cookie
 
@@ -16,31 +16,34 @@ http.Cookie{
 */
 
 exports.handler = (event, context, callback) => {
-  console.log('context', context)
-  console.log('event.headers', event.headers)
+  const body = event.body ? JSON.parse(event.body) : {}
+  const { identity, user } = context.clientContext;
 
   if (!event.headers.authorization) {
     console.log('event.headers.authorization missing')
     return callback(null, {
       statusCode: 401,
-      body: "You must be signed in to call this function"
+      body: JSON.stringify({
+      	message: 'missing event.headers.authorization. You must be signed in to call this function',
+      })
     })
   }
+
   const authToken = event.headers.authorization.substring(7)
 
-  const claims = context.clientContext && context.clientContext.user;
-  console.log('claims', claims)
-  if (!claims) {
+  if (!user) {
     return callback(null, {
       statusCode: 401,
-      body: "You must be signed in to call this function"
+      body: JSON.stringify({
+      	message: 'You must be signed in to call this function',
+      })
     });
   }
 
   let decodedToken
   try {
     decodedToken = jwt.decode(authToken, { complete: true })
-    console.log('decodedToken', decodedToken) // bar
+    console.log('decodedToken', decodedToken)
   } catch (e) {
     console.log(e)
   }
@@ -51,6 +54,8 @@ exports.handler = (event, context, callback) => {
     console.log('valid')
   } catch(err) {
     console.log('verify error', err)
+    console.log(err.name)
+    console.log(err.message)
     /*
       err = {
         name: 'TokenExpiredError',
@@ -60,6 +65,29 @@ exports.handler = (event, context, callback) => {
     */
   }
 
+
+  if (user) {
+
+    const myCookie = cookie.serialize('nf_jwt', authToken, {
+      secure: true,
+      httpOnly: true,
+      path: "/",
+      expires: Date.now()
+    })
+
+    // var cookieString = "myCookie="+cookieVal+"; domain=my.domain; expires="+date.toGMTString()+";";
+    const cookieResponse = {
+      "statusCode": 302,
+      "Location" : body.url,
+      "headers": {
+        "Set-Cookie": myCookie
+      },
+      "body": "..."
+    }
+    console.log('cookieResponse', cookieResponsecookieResponse)
+
+    return callback(null, cookieResponse);
+  }
   // 1. Read JWT
 
   // 2. Validate User
@@ -71,7 +99,7 @@ exports.handler = (event, context, callback) => {
     body: JSON.stringify({
     	event: event,
       context: context,
-      decoded: decodedToken
+      decodedToken: decodedToken
     })
   })
 }

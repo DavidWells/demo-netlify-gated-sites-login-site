@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cookie": "^0.3.1",
     "jsonwebtoken": "^8.3.0",
     "netlify-identity-widget": "^1.4.14",
     "react": "^16.4.1",
