@@ -5,3 +5,8 @@
   publish = "build"
   # Location of built function code
   functions = "functions-build"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control= "no-cache, no-store, must-revalidate"
