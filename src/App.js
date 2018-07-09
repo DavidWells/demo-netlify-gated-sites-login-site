@@ -25,9 +25,7 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      const tok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzExMDk4OTgsInN1YiI6ImZiYWQzNjMyLWY3MGEtNDFiYi04OWVjLTM2Y2NjZGZmMTk2MyIsImVtYWlsIjoiZGF2aWRncmVnb3J5d2VsbHNAZ21haWwuY29tIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJyb2xlcyI6WyJhZG1pbiJdfSwidXNlcl9tZXRhZGF0YSI6eyJmdWxsX25hbWUiOiJEYXZpZCJ9fQ.ZXoxQTrYQ2b0Ls8_p0vp0O4bPI-ZUeZSWf2HBbuxB2g"
-
-      window.location.href = `/.netlify/functions/handleLogin?url=${redirect_url}&token=${tok}`
+      window.location.href = `/.netlify/functions/handle-login?url=${redirect_url}&token=${user.token.access_token}`
 
       // doLogin(redirect_url).then((data) => {
       //   console.log('done', data)
