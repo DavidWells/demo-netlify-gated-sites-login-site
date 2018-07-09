@@ -26,7 +26,6 @@ export default class App extends Component {
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
       window.location.href = `/.netlify/functions/handle-login?url=${redirect_url}&token=${user.token.access_token}`
-
       // doLogin(redirect_url).then((data) => {
       //   console.log('done', data)
       //   // window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
