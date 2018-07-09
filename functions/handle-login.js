@@ -22,7 +22,7 @@ exports.handler = (event, context, callback) => {
   const response = {
     statusCode: 301,
     headers: {
-      Location: `${params.url}.netlify/functions/auth?token=${params.token}`,
+      Location: `${params.url}.netlify/functions/auth-two?token=${params.token}`,
       // Set no cache
       'Cache-Control': 'no-cache'
     }
