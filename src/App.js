@@ -83,14 +83,18 @@ export default class App extends Component {
          {this.renderButton()}
        </div>
        <div>
-        <h2>Sites</h2>
+        <h2>Protected Sites</h2>
           <div>
-            <a href='https://gated-sites-demo-site1.netlify.com/'>
-              Visit site 1
-            </a>
-            <button onClick={() => { removeCookie('https://gated-sites-demo-site1.netlify.com') }}>
-              site 1 removeCookie
-            </button>
+            <div>
+              <a href='https://gated-sites-demo-site1.netlify.com/'>
+                Visit site 1
+              </a>
+            </div>
+            <div>
+              <button onClick={() => { removeCookie('https://gated-sites-demo-site1.netlify.com') }}>
+                site 1 removeCookie
+              </button>
+            </div>
           </div>
           <br/>
           <br/>
