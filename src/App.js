@@ -91,6 +91,11 @@ export default class App extends Component {
               </a>
             </div>
             <div>
+              <a href='https://gated-sites-demo-site1.netlify.com/cookies/'>
+                view site 1 cookies
+              </a>
+            </div>
+            <div>
               <button onClick={() => { removeCookie('https://gated-sites-demo-site1.netlify.com') }}>
                 site 1 removeCookie
               </button>
@@ -103,6 +108,11 @@ export default class App extends Component {
             <div>
               <a href='https://gated-sites-demo-site2.netlify.com/'>
                 Visit site 2
+              </a>
+            </div>
+            <div>
+              <a href='https://gated-sites-demo-site2.netlify.com/cookies/'>
+                view site 2 cookies
               </a>
             </div>
             <div>
