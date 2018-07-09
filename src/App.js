@@ -82,6 +82,11 @@ export default class App extends Component {
         <div>
          {this.renderButton()}
        </div>
+       <div>
+        <h2>Sites</h2>
+          <a href='https://gated-sites-demo-site1.netlify.com/'>site1</a><br/>
+          <a href='https://gated-sites-demo-site2.netlify.com/'>site2</a><br/>
+       </div>
       </div>
     )
   }
