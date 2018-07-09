@@ -11,37 +11,35 @@ export default class App extends Component {
   constructor() {
     super()
     console.log('document.referrer', document.referrer)
-    // start identity
-    netlifyIdentity.init()
-  }
-  componentDidMount() {
     const parsed = getParams()
     // Set redirect URL
     if (parsed.site) {
       localStorage.setItem(REDIRECT_URL, parsed.site)
     }
+    const redirectUrl = localStorage.getItem(REDIRECT_URL)
+    // start identity
+    netlifyIdentity.on("init", user => {
+      if (user && redirectUrl) {
+        console.log('user', user)
+        doRedirect(redirectUrl, user.token.access_token)
+      }
+    })
+    netlifyIdentity.init()
+  }
+  componentDidMount() {
     /* Register listeners on identity widget events */
     netlifyIdentity.on("login", (user) => {
       /* Close netlify identity modal on login */
       netlifyIdentity.close()
       console.log('login complete', user)
       // refresh page
-      const redirect_url = localStorage.getItem(REDIRECT_URL)
-      console.log('Redirect', redirect_url)
-      if (!redirect_url) {
+      const redirectUrl = localStorage.getItem(REDIRECT_URL)
+      console.log('Redirect', redirectUrl)
+      if (!redirectUrl) {
         alert('No redirect url set')
         return false
       }
-      const useGET = true
-      if (useGET) {
-        window.location.href = `/.netlify/functions/handle-login-get?url=${redirect_url}&token=${user.token.access_token}`
-      } else {
-        console.log('Do POST COOKIE')
-        doLogin(redirect_url).then((data) => {
-          console.log('SET COOKIE VIA POST', data)
-          // window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
-        })
-      }
+      doRedirect(redirectUrl, user.token.access_token)
     })
     netlifyIdentity.on("logout", () => {
       // reload page
@@ -87,14 +85,18 @@ export default class App extends Component {
   }
 }
 
-function doLogin(redirect_url) {
+function doRedirect(url, token) {
+  window.location.href = `/.netlify/functions/handle-login-get?url=${url}&token=${token}`
+}
+
+/* Not in use
+function doLogin(redirectUrl) {
   return generateHeaders().then((headers) => {
     return fetch('/.netlify/functions/handle-login-post', {
       method: "POST",
       headers,
       body: JSON.stringify({
-        text: 'hi',
-        url: redirect_url
+        url: redirectUrl
       })
     })
     .then(response => {
@@ -106,7 +108,7 @@ function doLogin(redirect_url) {
     .catch((err) => {
       console.log('err', err)
     })
-  });
+  })
 }
 
 function generateHeaders() {
@@ -117,7 +119,7 @@ function generateHeaders() {
     })
   }
   return Promise.resolve(headers);
-}
+} */
 
 function getParams(url) {
   const urlParams = {}
