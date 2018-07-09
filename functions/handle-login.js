@@ -18,6 +18,17 @@ http.Cookie{
 exports.handler = (event, context, callback) => {
   const body = event.body ? JSON.parse(event.body) : {}
   const { identity, user } = context.clientContext;
+  const params = event.queryStringParameters
+  const response = {
+    statusCode: 301,
+    headers: {
+      Location: `${params.url}.netlify/functions/auth?token=${params.token}`,
+      // Set no cache
+      'Cache-Control': 'no-cache'
+    }
+  }
+  console.log('do redirect', response)
+  return callback(null, response)
 
   if (!event.headers.authorization) {
     console.log('event.headers.authorization missing')
@@ -66,29 +77,29 @@ exports.handler = (event, context, callback) => {
   }
 
 
-  if (user) {
-
-    const myCookie = cookie.serialize('nf_jwt', authToken, {
-      secure: true,
-      httpOnly: true,
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7
-      //expires: expiresValue
-    })
-
-    // var cookieString = "myCookie="+cookieVal+"; domain=my.domain; expires="+date.toGMTString()+";";
-    const cookieResponse = {
-      "statusCode": 302,
-      "Location" : body.url,
-      "headers": {
-        "Set-Cookie": myCookie
-      },
-      "body": "..."
-    }
-    console.log('cookieResponse', cookieResponse)
-
-    return callback(null, cookieResponse);
-  }
+  // if (user) {
+  //
+  //   const myCookie = cookie.serialize('nf_jwt', authToken, {
+  //     secure: true,
+  //     httpOnly: true,
+  //     path: "/",
+  //     maxAge: 60 * 60 * 24 * 7
+  //     //expires: expiresValue
+  //   })
+  //
+  //   // var cookieString = "myCookie="+cookieVal+"; domain=my.domain; expires="+date.toGMTString()+";";
+  //   const cookieResponse = {
+  //     "statusCode": 302,
+  //     "Location" : body.url,
+  //     "headers": {
+  //       "Set-Cookie": myCookie
+  //     },
+  //     "body": "..."
+  //   }
+  //   console.log('cookieResponse', cookieResponse)
+  //
+  //   return callback(null, cookieResponse);
+  // }
   // 1. Read JWT
 
   // 2. Validate User

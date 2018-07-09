@@ -25,11 +25,14 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      doLogin(redirect_url).then((data) => {
-        console.log('done', data)
-        const tok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzExMDk4OTgsInN1YiI6ImZiYWQzNjMyLWY3MGEtNDFiYi04OWVjLTM2Y2NjZGZmMTk2MyIsImVtYWlsIjoiZGF2aWRncmVnb3J5d2VsbHNAZ21haWwuY29tIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJyb2xlcyI6WyJhZG1pbiJdfSwidXNlcl9tZXRhZGF0YSI6eyJmdWxsX25hbWUiOiJEYXZpZCJ9fQ.ZXoxQTrYQ2b0Ls8_p0vp0O4bPI-ZUeZSWf2HBbuxB2g"
-        window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
-      })
+      const tok = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzExMDk4OTgsInN1YiI6ImZiYWQzNjMyLWY3MGEtNDFiYi04OWVjLTM2Y2NjZGZmMTk2MyIsImVtYWlsIjoiZGF2aWRncmVnb3J5d2VsbHNAZ21haWwuY29tIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJyb2xlcyI6WyJhZG1pbiJdfSwidXNlcl9tZXRhZGF0YSI6eyJmdWxsX25hbWUiOiJEYXZpZCJ9fQ.ZXoxQTrYQ2b0Ls8_p0vp0O4bPI-ZUeZSWf2HBbuxB2g"
+
+      window.location.href = `/.netlify/functions/handleLogin?url=${redirect_url}&token=${tok}`
+
+      // doLogin(redirect_url).then((data) => {
+      //   console.log('done', data)
+      //   // window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
+      // })
     })
     netlifyIdentity.on("logout", () => {
       // reload page
