@@ -10,6 +10,7 @@ const REDIRECT_URL = 'redirect_url'
 export default class App extends Component {
   constructor() {
     super()
+    console.log('document.referrer', document.referrer)
     // start identity
     netlifyIdentity.init()
   }
@@ -27,11 +28,20 @@ export default class App extends Component {
       // refresh page
       const redirect_url = localStorage.getItem(REDIRECT_URL)
       console.log('Redirect', redirect_url)
-      window.location.href = `/.netlify/functions/handle-login?url=${redirect_url}&token=${user.token.access_token}`
-      // doLogin(redirect_url).then((data) => {
-      //   console.log('done', data)
-      //   // window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
-      // })
+      if (!redirect_url) {
+        alert('No redirect url set')
+        return false
+      }
+      const useGET = false
+      if (useGET) {
+        window.location.href = `/.netlify/functions/handle-login-get?url=${redirect_url}&token=${user.token.access_token}`
+      } else {
+        console.log('Do POST COOKIE')
+        doLogin(redirect_url).then((data) => {
+          console.log('SET COOKIE VIA POST', data)
+          // window.location.href = `${redirect_url}.netlify/functions/auth?token=${tok}`
+        })
+      }
     })
     netlifyIdentity.on("logout", () => {
       // reload page
@@ -79,7 +89,7 @@ export default class App extends Component {
 
 function doLogin(redirect_url) {
   return generateHeaders().then((headers) => {
-    return fetch('/.netlify/functions/handle-login', {
+    return fetch('/.netlify/functions/handle-login-post', {
       method: "POST",
       headers,
       body: JSON.stringify({
@@ -93,7 +103,9 @@ function doLogin(redirect_url) {
       }
       return response.json()
     })
-    .catch((err) => console.log('err', err))
+    .catch((err) => {
+      console.log('err', err)
+    })
   });
 }
 
@@ -119,8 +131,8 @@ function getParams(url) {
     params = window.location.search.substring(1)
   }
   if (!params) return false
-  while (matches = pattern.exec(params)) { // eslint-disable-line
-    if (matches[1].indexOf('[') == '-1') { // eslint-disable-line
+  while (matches = pattern.exec(params)) {
+    if (matches[1].indexOf('[') == '-1') {
       urlParams[decode(matches[1])] = decode(matches[2])
     } else {
       const b1 = matches[1].indexOf('[')
