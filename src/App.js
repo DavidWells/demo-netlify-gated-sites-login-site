@@ -28,7 +28,7 @@ export default class App extends Component {
       doLogin(redirect_url).then((data) => {
         console.log('done', data)
         debugger
-        window.location.href = `${REDIRECT_URL}/.netlify/functions/auth?token=what`
+        window.location.href = `${redirect_url}.netlify/functions/auth?token=what`
       })
     })
     netlifyIdentity.on("logout", () => {
