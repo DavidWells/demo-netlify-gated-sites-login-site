@@ -32,11 +32,14 @@ exports.handler = (event, context, callback) => {
   var newToken = jwt.sign({
     sub: decodedToken.payload.sub,
     exp: decodedToken.payload.exp,
+    email: decodedToken.payload.email,
     "app_metadata": {
+      ...decodedToken.payload.app_metadata,
       "authorization": {
         "roles": ["admin", "editor"]
       }
-    }
+    },
+    user_metadata: decodedToken.payload.user_metadata
   }, 'secret');
 
   console.log('newToken', newToken)
