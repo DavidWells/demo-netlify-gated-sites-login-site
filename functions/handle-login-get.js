@@ -32,7 +32,7 @@ exports.handler = (event, context, callback) => {
   return callback(null, {
     statusCode: 301,
     headers: {
-      Location: `${params.url}.netlify/functions/set-cookie-get?token=${newToken}`,
+      Location: `${params.url}.netlify/functions/set-cookie-get?token=${newToken}&url=${params.url}`,
       'Cache-Control': 'no-cache'
     }
   })
