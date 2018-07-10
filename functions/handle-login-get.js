@@ -30,7 +30,7 @@ exports.handler = (event, context, callback) => {
 
   // Do redirect
   return callback(null, {
-    statusCode: 301,
+    statusCode: 302,
     headers: {
       Location: `${params.url}.netlify/functions/set-cookie?token=${newToken}&url=${params.url}`,
       'Cache-Control': 'no-cache'
