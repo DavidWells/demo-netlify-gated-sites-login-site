@@ -68,60 +68,66 @@ export default class App extends Component {
       </button>
     )
   }
+  renderSiteList() {
+    const sites = [
+      {
+        url: 'https://gated-sites-demo-site1.netlify.com',
+        title: 'Site 1'
+      },
+      {
+        url: 'https://gated-sites-demo-site2.netlify.com',
+        title: 'Site 2'
+      }
+    ]
 
+    return sites.map((site) => {
+      return (
+        <div className='site-wrapper'>
+          <div className='site-url'>
+            <h2>
+              <a href={site.url}>
+                Click to visit "{site.title}"
+              </a>
+            </h2>
+          </div>
+          <div className='site-contents'>
+
+            <div className='site-cookies'>
+              <button onClick={() => { window.location.href = `${site.url}/cookies/` }}>
+                View {site.title} cookies 🍪
+              </button>
+            </div>
+            <div className='site-clear-auth'>
+              <button onClick={() => { removeCookie(site.url) }}>
+                ❌ {site.title} clear auth cookie
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    })
+  }
   render() {
+
+
+
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">
-            Login Site
+            Login "Portal" Site
           </h1>
+          <p>Login to access a site</p>
+          <div>
+           {this.renderButton()}
+          </div>
         </header>
-        <br />
+
         <div>
-         {this.renderButton()}
-       </div>
-       <div>
-        <h2>Protected Sites</h2>
-          <div>
-            <div>
-              <a href='https://gated-sites-demo-site1.netlify.com/'>
-                Visit site 1
-              </a>
-            </div>
-            <div>
-              <a href='https://gated-sites-demo-site1.netlify.com/cookies/'>
-                view site 1 cookies
-              </a>
-            </div>
-            <div>
-              <button onClick={() => { removeCookie('https://gated-sites-demo-site1.netlify.com') }}>
-                site 1 removeCookie
-              </button>
-            </div>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <div>
-            <div>
-              <a href='https://gated-sites-demo-site2.netlify.com/'>
-                Visit site 2
-              </a>
-            </div>
-            <div>
-              <a href='https://gated-sites-demo-site2.netlify.com/cookies/'>
-                view site 2 cookies
-              </a>
-            </div>
-            <div>
-              <button onClick={() => { removeCookie('https://gated-sites-demo-site2.netlify.com') }}>
-                site 2 removeCookie
-              </button>
-            </div>
-          </div>
-       </div>
+          <h2>Protected Site List</h2>
+          {this.renderSiteList()}
+        </div>
       </div>
     )
   }
