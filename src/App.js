@@ -60,24 +60,32 @@ export default class App extends Component {
     netlifyIdentity.logout()
   }
   renderButton() {
+    const redirectUrl = localStorage.getItem(REDIRECT_URL) || sites[0].url
     const user = netlifyIdentity.currentUser()
     if (!user) {
       return (
-        <button onClick={this.handleLogIn}>
-          Sign up or Log in
-        </button>
+        <div>
+          <button onClick={this.handleLogIn}>
+            🔑 Sign up or Log in to {redirectUrl}
+          </button>
+
+          <p>To change Redirect URLs click on another protected site link below</p>
+        </div>
       )
     }
     return (
-      <button onClick={this.handleLogOut}>
-        Log out {user.email}
-      </button>
+      <div>
+        <button onClick={this.handleLogOut}>
+          Log out {user.email}
+        </button>
+        <p>To visit another site, logout, click the site link below and log back in</p>
+      </div>
     )
   }
   renderSiteList() {
-    return sites.map((site) => {
+    return sites.map((site, i) => {
       return (
-        <div className='site-wrapper'>
+        <div className='site-wrapper' key={i}>
           <div className='site-url'>
             <h2>
               <a href={site.url}>
@@ -102,22 +110,17 @@ export default class App extends Component {
     })
   }
   render() {
-
-
-
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">
             Login "Portal" Site
           </h1>
-          <p>Login to access a site</p>
           <div>
            {this.renderButton()}
           </div>
         </header>
-
         <div>
           <h2>Protected Site List</h2>
           {this.renderSiteList()}
@@ -128,7 +131,7 @@ export default class App extends Component {
 }
 
 function doRedirect(url, token) {
-  window.location.href = `/.netlify/functions/handle-login-get?url=${url}&token=${token}`
+  window.location.href = `/.netlify/functions/handle-login?url=${url}&token=${token}`
 }
 
 function removeCookie(url) {

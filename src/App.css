@@ -17,6 +17,9 @@
 
 .App-title {
   font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-intro {
