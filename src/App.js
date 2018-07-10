@@ -6,6 +6,16 @@ import './App.css'
 window.netlifyIdentity = netlifyIdentity
 
 const REDIRECT_URL = 'redirect_url'
+const sites = [
+  {
+    url: 'https://gated-sites-demo-site1.netlify.com',
+    title: 'Site 1'
+  },
+  {
+    url: 'https://gated-sites-demo-site2.netlify.com',
+    title: 'Site 2'
+  }
+]
 
 export default class App extends Component {
   constructor() {
@@ -33,12 +43,8 @@ export default class App extends Component {
       netlifyIdentity.close()
       console.log('login complete', user)
       // refresh page
-      const redirectUrl = localStorage.getItem(REDIRECT_URL)
+      const redirectUrl = localStorage.getItem(REDIRECT_URL) || sites[0].url
       console.log('Redirect', redirectUrl)
-      if (!redirectUrl) {
-        alert('No redirect url set')
-        return false
-      }
       doRedirect(redirectUrl, user.token.access_token)
     })
     netlifyIdentity.on("logout", () => {
@@ -69,17 +75,6 @@ export default class App extends Component {
     )
   }
   renderSiteList() {
-    const sites = [
-      {
-        url: 'https://gated-sites-demo-site1.netlify.com',
-        title: 'Site 1'
-      },
-      {
-        url: 'https://gated-sites-demo-site2.netlify.com',
-        title: 'Site 2'
-      }
-    ]
-
     return sites.map((site) => {
       return (
         <div className='site-wrapper'>
@@ -91,7 +86,6 @@ export default class App extends Component {
             </h2>
           </div>
           <div className='site-contents'>
-
             <div className='site-cookies'>
               <button onClick={() => { window.location.href = `${site.url}/cookies/` }}>
                 View {site.title} cookies 🍪

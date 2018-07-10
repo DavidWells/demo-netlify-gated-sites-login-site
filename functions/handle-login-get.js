@@ -2,10 +2,9 @@ import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
 
 exports.handler = (event, context, callback) => {
-  const body = event.body ? JSON.parse(event.body) : {}
-  const { identity, user } = context.clientContext;
+  // const { identity, user } = context.clientContext;
   const params = event.queryStringParameters
-
+  const redirectUrl = params.url.replace(/\/$/, "")
   let decodedToken
   try {
     decodedToken = jwt.decode(params.token, { complete: true })
@@ -32,7 +31,7 @@ exports.handler = (event, context, callback) => {
   return callback(null, {
     statusCode: 302,
     headers: {
-      Location: `${params.url}.netlify/functions/set-cookie?token=${newToken}&url=${params.url}`,
+      Location: `${redirectUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${params.url}`,
       'Cache-Control': 'no-cache'
     }
   })
