@@ -5,6 +5,7 @@
 
 # testing
 /coverage
+test-token.js
 
 # production
 /build
