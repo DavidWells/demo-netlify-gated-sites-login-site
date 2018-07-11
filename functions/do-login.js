@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
-
+import parseURL from 'url-parse'
 
 function parseJsonResponse(response) {
   return response.json().then(json => {
@@ -44,6 +44,10 @@ function request(apiURL, options = {}) {
 
 exports.handler = (event, context, callback) => {
   const siteUrl = process.env.URL
+  const params = event.queryStringParameters
+  const urlData = parseURL(params.site)
+
+  const redirectUrl = params.site.replace(/\/$/, "")
   console.log(event)
   console.log(context)
   const headers = event.headers
@@ -100,7 +104,7 @@ exports.handler = (event, context, callback) => {
     // return callback(null, {
     //   statusCode: 302,
     //   headers: {
-    //     Location: `${redirectUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${params.url}`,
+    //     Location: `${redirectUrl}/.netlify/functions/set-cookie?token=${newToken}&site=${params.url}`,
     //     'Cache-Control': 'no-cache'
     //   }
     // })
@@ -114,7 +118,8 @@ exports.handler = (event, context, callback) => {
         cookies: cookies,
         decodedToken: decodedToken,
         newToken: newToken,
-        clientContext: context.clientContext
+        clientContext: context.clientContext,
+        urlData: urlData
       })
     })
   }
