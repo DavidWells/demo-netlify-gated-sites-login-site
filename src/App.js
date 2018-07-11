@@ -145,10 +145,6 @@ function removeCookie(url) {
   window.location.href = `${url}/.netlify/functions/delete-cookie`
 }
 
-function setCookie(url, token) {
-  window.location.href = `${url}/.netlify/functions/delete-cookie`
-}
-
 /* Not in use
 function doLogin(redirectUrl) {
   return generateHeaders().then((headers) => {

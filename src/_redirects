@@ -1,4 +1,2 @@
 /admin/*	/admin/*	200!	Role=admin
 /admin/*	/login	401!
-/*  /.netlify/functions/do-login 302! Role=admin
-/*  /index.html	 200
