@@ -124,6 +124,14 @@ exports.handler = (event, context, callback) => {
   }
 
   return callback(null, {
+    statusCode: 302,
+    headers: {
+      Location: `${siteUrl}?site=${redirectUrl}`,
+      'Cache-Control': 'no-cache'
+    }
+  })
+
+  return callback(null, {
     statusCode: 200,
     body: JSON.stringify({
     	data: 'foo',
