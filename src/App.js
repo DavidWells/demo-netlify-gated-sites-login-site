@@ -78,6 +78,12 @@ export default class App extends Component {
         <button onClick={this.handleLogOut}>
           Log out {user.email}
         </button>
+        <button onClick={() => {
+          netlifyIdentity.logout()
+          window.location.href = '/.netlify/functions/delete-master-cookie'
+        }}>
+          Clear master cookie
+        </button>
         <p>To visit another site, logout, click the site link below and log back in</p>
       </div>
     )
@@ -89,7 +95,7 @@ export default class App extends Component {
           <div className='site-url'>
             <h2>
               <a href={site.url}>
-                Click to visit "{site.title}"
+                Click to visit {site.title}
               </a>
             </h2>
           </div>
@@ -120,7 +126,6 @@ export default class App extends Component {
           <div>
            {this.renderButton()}
           </div>
-          <a href='/.netlify/functions/delete-master-cookie'>Clear master cookie</a>
         </header>
         <div>
           <h2>Protected Site List</h2>

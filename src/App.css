@@ -31,15 +31,18 @@
 }
 .site-wrapper {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid #b9b9b9;
 }
 
 .site-contents {
-  padding: 20px;
+  padding: 30px;
   display: flex;
+  align-items: center;
+}
+.site-url a {
+  text-decoration: none;
 }
 .site-url h2 {
   margin-top: 25px;
