@@ -46,10 +46,9 @@ exports.handler = (event, context, callback) => {
   const siteUrl = process.env.URL
   const params = event.queryStringParameters
   const urlData = parseURL(params.site)
+  const redirectBaseUrl = urlData.origin
+  const redirectUrl = urlData.href
 
-  const redirectUrl = params.site.replace(/\/$/, "")
-  console.log(event)
-  console.log(context)
   const headers = event.headers
   let decodedToken
   if (headers.cookie) {
@@ -101,13 +100,13 @@ exports.handler = (event, context, callback) => {
     }, yourSuperSecret);
 
     // Do redirect
-    // return callback(null, {
-    //   statusCode: 302,
-    //   headers: {
-    //     Location: `${redirectUrl}/.netlify/functions/set-cookie?token=${newToken}&site=${params.url}`,
-    //     'Cache-Control': 'no-cache'
-    //   }
-    // })
+    return callback(null, {
+      statusCode: 302,
+      headers: {
+        Location: `${redirectBaseUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${redirectUrl}`,
+        'Cache-Control': 'no-cache'
+      }
+    })
 
     return callback(null, {
       statusCode: 200,
