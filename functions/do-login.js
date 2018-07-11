@@ -45,6 +45,31 @@ function request(apiURL, options = {}) {
 exports.handler = (event, context, callback) => {
   console.log(event)
   console.log(context)
+  const headers = event.headers
+  if (headers.cookie) {
+    const cookies = cookie.parse(headers.cookie)
+    if (cookies.nf_jwt) {
+      let decodedToken
+      try {
+        decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
+        console.log('decodedToken', decodedToken)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    return callback(null, {
+      statusCode: 200,
+      body: JSON.stringify({
+        data: 'foo',
+        event: event,
+        context: context,
+        cookies: cookies,
+        decodedToken: decodedToken,
+        clientContext: context.clientContext
+      })
+    })
+  }
+
   return callback(null, {
     statusCode: 200,
     body: JSON.stringify({
