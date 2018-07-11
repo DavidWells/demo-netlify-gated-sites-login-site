@@ -43,6 +43,7 @@ function request(apiURL, options = {}) {
 }
 
 exports.handler = (event, context, callback) => {
+  const siteUrl = process.env.URL
   console.log(event)
   console.log(context)
   const headers = event.headers
@@ -51,21 +52,59 @@ exports.handler = (event, context, callback) => {
     const cookies = cookie.parse(headers.cookie)
     console.log('cookies', cookies)
     if (!cookies.nf_jwt) {
-      // do redirect
-
+      // Do redirect back to login
+      return callback(null, {
+        statusCode: 302,
+        headers: {
+          Location: `${siteUrl}`,
+          'Cache-Control': 'no-cache'
+        }
+      })
     }
-    if (cookies.nf_jwt) {
-      try {
-        decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
-        console.log('decodedToken', decodedToken)
-      } catch (e) {
-        console.log(e)
-      }
 
-      // If other auth provider than netlify identity
-      // verify the JWT against your secret
-
+    try {
+      decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
+      console.log('decodedToken', decodedToken)
+    } catch (e) {
+      console.log(e)
     }
+
+    // If other auth provider than netlify identity
+    // verify the JWT against your secret
+
+    if (!decodedToken.payload) {
+      return callback(null, {
+        statusCode: 401,
+        body: JSON.stringify({
+          message: `Your token is invalid. Logout and log back in at ${siteUrl}`,
+        })
+      })
+    }
+
+    // Make new token
+    const yourSuperSecret = 'secret'
+    const newToken = jwt.sign({
+      sub: decodedToken.payload.sub,
+      exp: decodedToken.payload.exp,
+      email: decodedToken.payload.email,
+      "app_metadata": {
+        ...decodedToken.payload.app_metadata,
+        "authorization": {
+          "roles": ["admin", "editor"]
+        }
+      },
+      user_metadata: decodedToken.payload.user_metadata
+    }, yourSuperSecret);
+
+    // Do redirect
+    // return callback(null, {
+    //   statusCode: 302,
+    //   headers: {
+    //     Location: `${redirectUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${params.url}`,
+    //     'Cache-Control': 'no-cache'
+    //   }
+    // })
+
     return callback(null, {
       statusCode: 200,
       body: JSON.stringify({
@@ -74,6 +113,7 @@ exports.handler = (event, context, callback) => {
         context: context,
         cookies: cookies,
         decodedToken: decodedToken,
+        newToken: newToken,
         clientContext: context.clientContext
       })
     })
