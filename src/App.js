@@ -120,6 +120,7 @@ export default class App extends Component {
           <div>
            {this.renderButton()}
           </div>
+          <a href='/.netlify/functions/delete-master-cookie'>Clear master cookie</a>
         </header>
         <div>
           <h2>Protected Site List</h2>
