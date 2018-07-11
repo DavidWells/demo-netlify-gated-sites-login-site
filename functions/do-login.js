@@ -50,18 +50,22 @@ exports.handler = (event, context, callback) => {
   if (headers.cookie) {
     const cookies = cookie.parse(headers.cookie)
     console.log('cookies', cookies)
-    // if (cookies.nf_jwt) {
-    //   try {
-    //     decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
-    //     console.log('decodedToken', decodedToken)
-    //   } catch (e) {
-    //     console.log(e)
-    //   }
-    //
-    //   // If other auth provider than netlify identity
-    //   // verify the JWT against your secret
-    //
-    // }
+    if (!cookies.nf_jwt) {
+      // do redirect
+
+    }
+    if (cookies.nf_jwt) {
+      try {
+        decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
+        console.log('decodedToken', decodedToken)
+      } catch (e) {
+        console.log(e)
+      }
+
+      // If other auth provider than netlify identity
+      // verify the JWT against your secret
+
+    }
     return callback(null, {
       statusCode: 200,
       body: JSON.stringify({
