@@ -43,10 +43,15 @@ function request(apiURL, options = {}) {
 }
 
 exports.handler = (event, context, callback) => {
+  console.log(event)
+  console.log(context)
   return callback(null, {
     statusCode: 200,
     body: JSON.stringify({
-    	data: 'foo'
+    	data: 'foo',
+      event: event,
+      context: context,
+      clientContext: context.clientContext
     })
   })
 }
