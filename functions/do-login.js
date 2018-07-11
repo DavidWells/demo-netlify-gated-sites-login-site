@@ -46,10 +46,11 @@ exports.handler = (event, context, callback) => {
   console.log(event)
   console.log(context)
   const headers = event.headers
+  let decodedToken
   if (headers.cookie) {
     const cookies = cookie.parse(headers.cookie)
+    console.log('cookies', cookies)
     // if (cookies.nf_jwt) {
-    //   let decodedToken
     //   try {
     //     decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
     //     console.log('decodedToken', decodedToken)
