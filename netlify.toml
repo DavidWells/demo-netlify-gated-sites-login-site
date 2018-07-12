@@ -10,17 +10,3 @@
   for = "/*"
   [headers.values]
     Cache-Control= "no-cache, no-store, must-revalidate"
-
-# /* site=:site /.netlify/functions/do-login?site=:site 302! Role=*
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/do-login"
-  status = 302
-  force = true
-  query = {site = ":site"}
-  conditions = {Role = ["admin"]}
-# /* 	/index.html	 200
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
