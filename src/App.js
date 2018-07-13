@@ -69,6 +69,9 @@ export default class App extends Component {
 
     oktaSignIn.session.get((res) => {
       console.log('res', res)
+      if (res.status === 'INACTIVE') {
+        console.log("User not logged in")
+      }
       // Session exists, show logged in state.
       if (res.status === 'ACTIVE') {
         ajax("POST", "/.netlify/functions/verify-okta", JSON.stringify({ okta_id: res.id }), function (err) {
@@ -92,6 +95,24 @@ export default class App extends Component {
           console.error(err);
         }
       );
+    });
+  }
+  handleOktaLogout = (e) => {
+    e.preventDefault();
+    var oktaSignIn = new OktaSignIn({
+      baseUrl: baseURL,
+      clientId: clientId,
+      authParams: {
+        issuer: baseURL + "/oauth2/default",
+        responseType: ['id_token'],
+        display: 'page'
+      }
+    });
+    oktaSignIn.session.close(function(err) {
+      console.log('Ping delete cookie function')
+      // ajax("DELETE", "/.netlify/functions/verify-okta", "", function(err) {
+      //   document.location.reload();
+      // });
     });
   }
   handleLogIn = () => {
@@ -175,6 +196,9 @@ export default class App extends Component {
         </div>
         <h2>Okta</h2>
         <div id="okta-login-container"></div>
+        <button onClick={this.handleOktaLogout}>
+          Okta Sign Out
+        </button>
       </div>
     )
   }
