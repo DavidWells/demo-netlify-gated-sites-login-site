@@ -5,6 +5,10 @@ import './App.css'
 
 window.netlifyIdentity = netlifyIdentity
 
+
+var baseURL = "https://dev-652264.oktapreview.com";
+var clientId = "0oafn99h3qdL5jY6P0h7";
+
 const REDIRECT_URL = 'redirect_url'
 const sites = [
   {
@@ -51,6 +55,45 @@ export default class App extends Component {
       // reload page
       window.location.href = window.location.href
     })
+
+    // init okta
+      const oktaSignIn = new window.OktaSignIn({
+      baseUrl: baseURL,
+      clientId: clientId,
+      redirectUri: 'http://localhost:3000/implicit/callback',
+      authParams: {
+        issuer: baseURL + "/oauth2/default",
+        responseType: ['id_token'],
+        display: 'page'
+      }
+    });
+
+    oktaSignIn.session.get((res) => {
+      console.log('res', res)
+      // Session exists, show logged in state.
+      if (res.status === 'ACTIVE') {
+        ajax("POST", "/.netlify/functions/verify-okta", JSON.stringify({ okta_id: res.id }), function (err) {
+          if (err) {
+            console.error("Error setting session cookie for existing session: ", err);
+            return;
+          }
+          document.location.reload();
+        });
+        return;
+      }
+      // No session, show the login form
+      oktaSignIn.renderEl(
+        { el: '#okta-login-container' },
+        function success(res) {
+          res.session.setCookieAndRedirect(document.location.href);
+          return;
+        },
+        function error(err) {
+          // handle errors as needed
+          console.error(err);
+        }
+      );
+    });
   }
   handleLogIn = () => {
     // Open login
@@ -131,6 +174,8 @@ export default class App extends Component {
           <h2>Protected Site List</h2>
           {this.renderSiteList()}
         </div>
+        <h2>Okta</h2>
+        <div id="okta-login-container"></div>
       </div>
     )
   }
@@ -145,6 +190,16 @@ function removeCookie(url) {
   window.location.href = `${url}/.netlify/functions/delete-cookie`
 }
 
+
+
+function ajax(method, url, body, cb) {
+  var request = new window.XMLHttpRequest()
+  request.open(method, url)
+  request.addEventListener("load", (e) => {
+    cb(request.status === 200 ? null : request)
+  })
+  request.send(body)
+}
 /* Not in use
 function doLogin(redirectUrl) {
   return generateHeaders().then((headers) => {

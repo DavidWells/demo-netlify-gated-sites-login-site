@@ -13,7 +13,7 @@ exports.handler = (event, context, callback) => {
 
   const cookieHeader = headers.cookie || ''
   const cookies = cookie.parse(cookieHeader)
-  console.log('cookies', cookies)
+  // If no cookie, send back to login portal
   if (!headers.cookie || !cookies.nf_jwt) {
     const returnToLogin = (redirectUrl) ? `${siteUrl}?site=${redirectUrl}` : siteUrl
     return callback(null, {
@@ -36,7 +36,6 @@ exports.handler = (event, context, callback) => {
 
   // If other auth provider than netlify identity
   // verify the JWT against your secret
-
   if (!decodedToken.payload) {
     return callback(null, {
       statusCode: 401,
@@ -59,6 +58,7 @@ exports.handler = (event, context, callback) => {
     },
     user_metadata: decodedToken.payload.user_metadata
   }
+  
   const yourSuperSecret = 'secret'
   const newToken = jwt.sign(newTokenData, yourSuperSecret)
 
