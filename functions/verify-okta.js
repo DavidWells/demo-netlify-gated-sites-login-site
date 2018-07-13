@@ -60,7 +60,7 @@ exports.handler = (event, context, callback) => {
       httpOnly: true,
       path: "/",
       expires: date,
-      domain: urlData.hostname
+      // domain: urlData.hostname
     })
 
     console.log('nf_jwtCookie', nf_jwtCookie)
