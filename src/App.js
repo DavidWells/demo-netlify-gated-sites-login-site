@@ -74,18 +74,22 @@ export default class App extends Component {
       }
       // Session exists, show logged in state.
       if (res.status === 'ACTIVE') {
-        ajax("POST", "/.netlify/functions/verify-okta", JSON.stringify({ okta_id: res.id }), function (err) {
-          if (err) {
-            console.error("Error setting session cookie for existing session: ", err);
-            return;
-          }
-          document.location.reload();
-        });
-        return;
+        fetch('/.netlify/functions/verify-okta', {
+          method: "POST",
+          body: JSON.stringify({
+            okta_id: res.id
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log('okta data', data)
+          // then reload page
+        })
+
+        return false;
       }
       // No session, show the login form
-      oktaSignIn.renderEl(
-        { el: '#okta-login-container' },
+      oktaSignIn.renderEl({ el: '#okta-login-container' },
         function success(res) {
           res.session.setCookieAndRedirect(document.location.href);
           return;
@@ -113,6 +117,16 @@ export default class App extends Component {
       ajax("DELETE", "/.netlify/functions/verify-okta", "", function(err) {
         document.location.reload();
       });
+      fetch('/.netlify/functions/logout-okta', {
+        method: "POST",
+        body: JSON.stringify({})
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('okta cookie deleted', data)
+        // then reload page
+        window.location.href = window.location.origin
+      })
     });
   }
   handleLogIn = () => {
