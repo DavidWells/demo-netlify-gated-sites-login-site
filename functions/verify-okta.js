@@ -21,8 +21,45 @@ exports.handler = (event, context, callback) => {
   .then(res => res.json())
   .then(data => {
     console.log('okta data', data)
+    if (data.status !== "ACTIVE") {
+      return callback(null, {
+        statusCode: 500,
+        body: JSON.stringify({
+        	error: 'Session status was not active'
+        })
+      })
+	  }
+
+    // Okta session active. Make them a netlify nf_jwt Token
+
+    // Make new netlify token
+    const netlifyTokenData = {
+      sub: data.userId,
+      exp: data.expiresAt,
+      email: data.login,
+      "app_metadata": {
+        "authorization": {
+          "roles": ["admin", "editor"]
+        }
+      }
+    }
+
+    const netlifyToken = jwt.sign(newTokenData, process.env.JWT_SECRET)
+
+    const nf_jwtCookie = cookie.serialize('nf_jwt', netlifyToken, {
+      secure: true,
+      httpOnly: true,
+      path: "/",
+      expires: data.expiresAt
+    })
+
+    console.log('nf_jwtCookie', nf_jwtCookie)
+
     return callback(null, {
       statusCode: 200,
+      headers: {
+        'Set-Cookie': nf_jwtCookie
+      },
       body: JSON.stringify({
       	data: data
       })
