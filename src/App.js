@@ -41,6 +41,7 @@ export default class App extends Component {
     netlifyIdentity.init()
   }
   componentDidMount() {
+    const urlParams = getParams()
     /* Register listeners on identity widget events */
     netlifyIdentity.on("login", (user) => {
       /* Close netlify identity modal on login */
@@ -88,7 +89,11 @@ export default class App extends Component {
         .then(data => {
           console.log('okta data', data)
           const redirectUrl = localStorage.getItem(REDIRECT_URL) || sites[0].url
-          doRedirect(redirectUrl, data.token)
+
+          // if there is a redirect site do the redirect
+          if (urlParams.site) {
+            doRedirect(redirectUrl, data.token)
+          }
           // reload page
           // window.location.href = window.location.href
         })
@@ -105,8 +110,8 @@ export default class App extends Component {
           // handle errors as needed
           console.error(err);
         }
-      );
-    });
+      )
+    })
   }
   handleOktaLogout = (e) => {
     e.preventDefault();
