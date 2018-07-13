@@ -60,7 +60,7 @@ export default class App extends Component {
       const oktaSignIn = new window.OktaSignIn({
       baseUrl: baseURL,
       clientId: clientId,
-      redirectUri: 'http://localhost:3000/implicit/callback',
+      redirectUri: 'https://gated-sites-demo-login-site.netlify.com/admin',
       authParams: {
         issuer: baseURL + "/oauth2/default",
         responseType: ['id_token'],
