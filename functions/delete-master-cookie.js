@@ -1,6 +1,5 @@
-import cookie from 'cookie'
 import jwt from 'jsonwebtoken'
-import util from 'util'
+import cookie from 'cookie'
 
 exports.handler = (event, context, callback) => {
 
