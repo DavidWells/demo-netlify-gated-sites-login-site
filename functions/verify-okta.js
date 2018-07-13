@@ -1,32 +1,26 @@
 import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
-import parseURL from 'url-parse'
-// https://stackoverflow.com/questions/46333510/okta-sign-in-widget-mfa
 
-// Then create API token https://dev-652264-admin.oktapreview.com/admin/access/api/tokens
-
-// Then add netlify env vars
+const oktaBaseURL = process.env.OKTA_BASE_URL
+const oktaApiToken = process.env.OKTA_API_TOKEN
+const jwtSecret = process.env.JWT_SECRET
 
 exports.handler = (event, context, callback) => {
   const body = JSON.parse(event.body)
-  const urlData = parseURL(process.env.URL)
-  console.log('urlData', urlData)
-  console.log('Verify okta and set cookie')
-  const baseURL = process.env.OKTA_BASE_URL
 
-  const options = {
+  // Call our Okta instance and verify session
+  fetch(`${oktaBaseURL}/api/v1/sessions/${body.okta_id}`, {
     'headers': {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': `SSWS ${process.env.OKTA_API_TOKEN}`
+      'Authorization': `SSWS ${oktaApiToken}`
     }
-  }
-
-  fetch(`${baseURL}/api/v1/sessions/${body.okta_id}`, options)
+  })
   .then(res => res.json())
   .then(data => {
-    console.log('okta data', data)
+    console.log('Okta response', data)
+    // Bail if session is not ACTIVE
     if (data.status !== "ACTIVE") {
       return callback(null, {
         statusCode: 500,
@@ -37,13 +31,12 @@ exports.handler = (event, context, callback) => {
 	  }
 
     // Okta session active. Make them a netlify nf_jwt Token
-    var date = new Date(data.expiresAt);
+    const date = new Date(data.expiresAt);
+    const expiresIn = (date.getTime() / 1000)
 
-    var calculatedExpiresIn = (date.getTime() / 1000)
-    console.log('calculatedExpiresIn', calculatedExpiresIn)
     // Make new netlify token
     const netlifyTokenData = {
-      exp: calculatedExpiresIn,
+      exp: expiresIn,
       sub: data.userId,
       email: data.login,
       "app_metadata": {
@@ -56,44 +49,36 @@ exports.handler = (event, context, callback) => {
         ]
       }
     }
-    // 1529998766307
-    // 1531523583
 
-    console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
+    // Sign Token with our Secret
+    const netlifyToken = jwt.sign(netlifyTokenData, jwtSecret)
 
-    const netlifyToken = jwt.sign(netlifyTokenData, process.env.JWT_SECRET)
-
-    const nf_jwtCookie = cookie.serialize('nf_jwt', netlifyToken, {
+    // Generate `nf_jwt` cookie string
+    const netlifyAccessCookie = cookie.serialize('nf_jwt', netlifyToken, {
       secure: true,
       httpOnly: true,
       path: "/",
-      expires: date,
-      // domain: urlData.hostname
+      expires: date
     })
 
-    console.log('nf_jwtCookie', nf_jwtCookie)
-
+    // Return token + set Cookie
     return callback(null, {
       statusCode: 200,
       headers: {
-        'Set-Cookie': nf_jwtCookie,
+        'Set-Cookie': netlifyAccessCookie,
         'Cache-Control': 'no-cache'
       },
       body: JSON.stringify({
       	token: netlifyToken
       })
     })
-  }).catch((e) => {
-    console.log('promise error', e)
+  }).catch((error) => {
+    console.log('fetch error', error)
+    return callback(null, {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: error.message
+      })
+    })
   })
-
-  // do redirect & set cookie
-  // return callback(null, {
-  //   statusCode: 302,
-  //   headers: {
-  //     Location: process.env.URL,
-  //     'Set-Cookie': myCookie,
-  //     'Cache-Control': 'no-cache'
-  //   }
-  // })
 }
