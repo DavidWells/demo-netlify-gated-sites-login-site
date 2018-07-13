@@ -84,8 +84,11 @@ export default class App extends Component {
             okta_id: res.id
           })
         })
+        .then((response) => { return response.json() })
         .then(data => {
           console.log('okta data', data)
+          const redirectUrl = localStorage.getItem(REDIRECT_URL) || sites[0].url
+          doRedirect(redirectUrl, data.token)
           // reload page
           // window.location.href = window.location.href
         })

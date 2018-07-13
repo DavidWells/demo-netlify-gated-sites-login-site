@@ -76,10 +76,11 @@ exports.handler = (event, context, callback) => {
     return callback(null, {
       statusCode: 200,
       headers: {
-        'Set-Cookie': nf_jwtCookie
+        'Set-Cookie': nf_jwtCookie,
+        'Cache-Control': 'no-cache'
       },
       body: JSON.stringify({
-      	data: data
+      	token: netlifyToken
       })
     })
   }).catch((e) => {
