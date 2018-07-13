@@ -57,6 +57,7 @@ export default class App extends Component {
       window.location.href = window.location.href
     })
 
+    console.log('redirect_uri', window.location.origin)
     // init okta
     const oktaSignIn = new window.OktaSignIn({
       baseUrl: baseURL,
@@ -119,6 +120,7 @@ export default class App extends Component {
     var oktaSignIn = new window.OktaSignIn({
       baseUrl: baseURL,
       clientId: clientId,
+      redirect_uri: window.location.origin,
       authParams: {
         issuer: baseURL + "/oauth2/default",
         responseType: ['id_token'],
