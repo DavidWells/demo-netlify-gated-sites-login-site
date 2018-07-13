@@ -8,7 +8,7 @@ exports.handler = (event, context, callback) => {
   const urlData = parseURL(params.url)
   const redirectBaseUrl = urlData.origin
   const redirectUrl = urlData.href
-
+  console.log('urlData', urlData)
   const headers = event.headers
   let decodedToken
   if (headers.cookie) {
@@ -76,10 +76,12 @@ exports.handler = (event, context, callback) => {
     /**/
 
     // Do redirect
+    const r = `${redirectBaseUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${redirectUrl}`
+    console.log('r', r)
     return callback(null, {
       statusCode: 302,
       headers: {
-        Location: `${redirectBaseUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${redirectUrl}`,
+        Location: r,
         'Cache-Control': 'no-cache'
       }
     })
