@@ -44,7 +44,7 @@ exports.handler = (event, context, callback) => {
       }
     }
 
-    const netlifyToken = jwt.sign(newTokenData, process.env.JWT_SECRET)
+    const netlifyToken = jwt.sign(netlifyTokenData, process.env.JWT_SECRET)
 
     const nf_jwtCookie = cookie.serialize('nf_jwt', netlifyToken, {
       secure: true,
