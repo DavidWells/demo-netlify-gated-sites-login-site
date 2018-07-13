@@ -64,6 +64,8 @@ exports.handler = (event, context, callback) => {
       	data: data
       })
     })
+  }).catch((e) => {
+    console.log('promise error', e)
   })
 
   // do redirect & set cookie
