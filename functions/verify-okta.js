@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
-
+import parseURL from 'url-parse'
 // https://stackoverflow.com/questions/46333510/okta-sign-in-widget-mfa
 
 // Then create API token https://dev-652264-admin.oktapreview.com/admin/access/api/tokens
@@ -10,7 +10,8 @@ import cookie from 'cookie'
 
 exports.handler = (event, context, callback) => {
   const body = JSON.parse(event.body)
-
+  const urlData = parseURL(process.env.URL)
+  console.log('urlData', urlData)
   console.log('Verify okta and set cookie')
   const baseURL = process.env.OKTA_BASE_URL
 
@@ -59,7 +60,7 @@ exports.handler = (event, context, callback) => {
       httpOnly: true,
       path: "/",
       expires: d,
-      domain: process.env.URL
+      domain: urlData.hostname
     })
 
     console.log('nf_jwtCookie', nf_jwtCookie)
