@@ -76,6 +76,10 @@ export default class App extends Component {
       if (res.status === 'ACTIVE') {
         fetch('/.netlify/functions/verify-okta', {
           method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          credentials: 'same-origin',
           body: JSON.stringify({
             okta_id: res.id
           })
