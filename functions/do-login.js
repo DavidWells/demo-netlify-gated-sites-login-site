@@ -14,7 +14,7 @@ exports.handler = (event, context, callback) => {
   const cookieHeader = headers.cookie || ''
   const cookies = cookie.parse(cookieHeader)
   console.log('cookies', cookies)
-  if (!headers.cookie || !cookie.nf_jwt) {
+  if (!headers.cookie || !cookies.nf_jwt) {
     const returnToLogin = (redirectUrl) ? `${siteUrl}?site=${redirectUrl}` : siteUrl
     return callback(null, {
       statusCode: 302,
