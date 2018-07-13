@@ -99,7 +99,7 @@ export default class App extends Component {
   }
   handleOktaLogout = (e) => {
     e.preventDefault();
-    var oktaSignIn = new OktaSignIn({
+    var oktaSignIn = new window.OktaSignIn({
       baseUrl: baseURL,
       clientId: clientId,
       authParams: {
