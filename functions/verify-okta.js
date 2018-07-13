@@ -43,15 +43,23 @@ exports.handler = (event, context, callback) => {
     console.log('calculatedExpiresIn', calculatedExpiresIn)
     // Make new netlify token
     const netlifyTokenData = {
-      sub: data.userId,
       exp: calculatedExpiresIn,
+      sub: data.userId,
       email: data.login,
       "app_metadata": {
         "authorization": {
           "roles": ["admin", "editor"]
-        }
+        },
+        "provider": "email",
+        "roles": [
+          "admin"
+        ]
       }
     }
+    // 1529998766307
+    // 1531523583
+
+    console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
 
     const netlifyToken = jwt.sign(netlifyTokenData, process.env.JWT_SECRET)
 
