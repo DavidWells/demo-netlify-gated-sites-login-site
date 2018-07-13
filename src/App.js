@@ -91,9 +91,9 @@ export default class App extends Component {
         .then(data => {
           console.log('okta data', data)
           const redirectUrl = localStorage.getItem(REDIRECT_URL) || sites[0].url
-
+          const hashData = parseHash()
           // if there is a redirect site do the redirect
-          if (urlParams.site) {
+          if (urlParams.site || hashData.id_token) {
             doRedirect(redirectUrl, data.token)
           }
           // reload page
@@ -279,6 +279,18 @@ function generateHeaders() {
   }
   return Promise.resolve(headers);
 } */
+
+function parseHash() {
+  if (!window.location.hash) {
+    return {}
+  }
+  const hash = window.location.hash.substring(1)
+  return hash.split('&').reduce((acc, curr) => {
+    let temp = curr.split('=');
+    acc[temp[0]] = temp[1]
+    return acc
+  }, {})
+}
 
 function getParams(url) {
   const urlParams = {}
