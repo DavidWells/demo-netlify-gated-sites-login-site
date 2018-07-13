@@ -5,7 +5,7 @@ import parseURL from 'url-parse'
 exports.handler = (event, context, callback) => {
   const siteUrl = process.env.URL
   const params = event.queryStringParameters
-  const urlData = parseURL(params.url)
+  const urlData = parseURL(params.site)
   const redirectBaseUrl = urlData.origin
   const redirectUrl = urlData.href
   console.log('urlData', urlData)
@@ -87,6 +87,7 @@ exports.handler = (event, context, callback) => {
     })
   }
 
+  console.log('fall through')
   // No cookies found. Redirect them back to login page
   return callback(null, {
     statusCode: 302,
