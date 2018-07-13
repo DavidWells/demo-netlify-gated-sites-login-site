@@ -31,11 +31,14 @@ exports.handler = (event, context, callback) => {
 	  }
 
     // Okta session active. Make them a netlify nf_jwt Token
+    var d = new Date(data.expiresAt);
 
+    var calculatedExpiresIn = (((d.getTime()) + (60 * 60 * 1000)) - (d.getTime() - d.getMilliseconds()) / 1000);
+    console.log('calculatedExpiresIn', calculatedExpiresIn)
     // Make new netlify token
     const netlifyTokenData = {
       sub: data.userId,
-      exp: data.expiresAt,
+      exp: calculatedExpiresIn,
       email: data.login,
       "app_metadata": {
         "authorization": {
