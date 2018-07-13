@@ -110,9 +110,9 @@ export default class App extends Component {
     });
     oktaSignIn.session.close(function(err) {
       console.log('Ping delete cookie function')
-      // ajax("DELETE", "/.netlify/functions/verify-okta", "", function(err) {
-      //   document.location.reload();
-      // });
+      ajax("DELETE", "/.netlify/functions/verify-okta", "", function(err) {
+        document.location.reload();
+      });
     });
   }
   handleLogIn = () => {
@@ -194,7 +194,7 @@ export default class App extends Component {
           <h2>Protected Site List</h2>
           {this.renderSiteList()}
         </div>
-        <h2>Okta</h2>
+        <h2>Okta SSO!</h2>
         <div id="okta-login-container"></div>
         <button onClick={this.handleOktaLogout}>
           Okta Sign Out
