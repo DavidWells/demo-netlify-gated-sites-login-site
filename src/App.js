@@ -131,6 +131,10 @@ export default class App extends Component {
       console.log('Ping delete cookie function')
       fetch('/.netlify/functions/logout-okta', {
         method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        credentials: 'same-origin',
         body: JSON.stringify({})
       })
       .then(data => {
