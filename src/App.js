@@ -80,7 +80,6 @@ export default class App extends Component {
             okta_id: res.id
           })
         })
-        .then(res => res.json())
         .then(data => {
           console.log('okta data', data)
           // then reload page
@@ -114,14 +113,10 @@ export default class App extends Component {
     });
     oktaSignIn.session.close(function(err) {
       console.log('Ping delete cookie function')
-      ajax("DELETE", "/.netlify/functions/verify-okta", "", function(err) {
-        document.location.reload();
-      });
       fetch('/.netlify/functions/logout-okta', {
         method: "POST",
         body: JSON.stringify({})
       })
-      .then(res => res.json())
       .then(data => {
         console.log('okta cookie deleted', data)
         // then reload page
