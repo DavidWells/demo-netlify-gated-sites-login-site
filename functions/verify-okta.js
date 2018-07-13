@@ -1,7 +1,12 @@
 import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
+
 // https://stackoverflow.com/questions/46333510/okta-sign-in-widget-mfa
+
+// Then create API token https://dev-652264-admin.oktapreview.com/admin/access/api/tokens
+
+// Then add netlify env vars
 
 exports.handler = (event, context, callback) => {
   const body = JSON.parse(event.body)
@@ -53,7 +58,7 @@ exports.handler = (event, context, callback) => {
       secure: true,
       httpOnly: true,
       path: "/",
-      expires: data.expiresAt
+      expires: d
     })
 
     console.log('nf_jwtCookie', nf_jwtCookie)
