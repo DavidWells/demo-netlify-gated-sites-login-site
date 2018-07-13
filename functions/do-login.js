@@ -8,91 +8,82 @@ exports.handler = (event, context, callback) => {
   const urlData = parseURL(params.site)
   const redirectBaseUrl = urlData.origin
   const redirectUrl = urlData.href
-  console.log('urlData', urlData)
-  const headers = event.headers
-  let decodedToken
-  if (headers.cookie) {
-    const cookies = cookie.parse(headers.cookie)
-    console.log('cookies', cookies)
-    if (!cookies.nf_jwt) {
-      // Do redirect back to login
-      return callback(null, {
-        statusCode: 302,
-        headers: {
-          Location: `${siteUrl}`,
-          'Cache-Control': 'no-cache'
-        }
-      })
-    }
+  const { headers } = event
+  // No auth cookie found. Return to login site
 
-    try {
-      decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
-      console.log('decodedToken', decodedToken)
-    } catch (e) {
-      console.log(e)
-    }
-
-    // If other auth provider than netlify identity
-    // verify the JWT against your secret
-
-    if (!decodedToken.payload) {
-      return callback(null, {
-        statusCode: 401,
-        body: JSON.stringify({
-          message: `Your token is invalid. Logout and log back in at ${siteUrl}`,
-        })
-      })
-    }
-
-    // Make new token
-    const newTokenData = {
-      sub: decodedToken.payload.sub,
-      exp: decodedToken.payload.exp,
-      email: decodedToken.payload.email,
-      "app_metadata": {
-        ...decodedToken.payload.app_metadata,
-        "authorization": {
-          "roles": ["admin", "editor"]
-        }
-      },
-      user_metadata: decodedToken.payload.user_metadata
-    }
-    const yourSuperSecret = 'secret'
-    const newToken = jwt.sign(newTokenData, yourSuperSecret)
-
-    /* Return this instead of redirect for debugging
-    return callback(null, {
-      statusCode: 200,
-      body: JSON.stringify({
-        event: event,
-        context: context,
-        cookies: cookies,
-        decodedToken: decodedToken,
-        newToken: newToken,
-        clientContext: context.clientContext,
-        urlData: urlData
-      })
-    })
-    /**/
-
-    // Do redirect
-    const r = `${redirectBaseUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${redirectUrl}`
-    console.log('r', r)
+  const cookieHeader = headers.cookie || ''
+  const cookies = cookie.parse(cookieHeader)
+  console.log('cookies', cookies)
+  if (!headers.cookie || !cookie.nf_jwt) {
+    const returnToLogin = (redirectUrl) ? `${siteUrl}?site=${redirectUrl}` : siteUrl
     return callback(null, {
       statusCode: 302,
       headers: {
-        Location: r,
+        Location: returnToLogin,
         'Cache-Control': 'no-cache'
       }
     })
   }
 
-  console.log('fall through')
-  // No cookies found. Redirect them back to login page
+  let decodedToken
+  try {
+    decodedToken = jwt.decode(cookies.nf_jwt, { complete: true })
+    console.log('decodedToken', decodedToken)
+  } catch (e) {
+    console.log(e)
+    // Token invalid
+  }
+
+  // If other auth provider than netlify identity
+  // verify the JWT against your secret
+
+  if (!decodedToken.payload) {
+    return callback(null, {
+      statusCode: 401,
+      body: JSON.stringify({
+        message: `Your token is invalid. Logout and log back in at ${siteUrl}`,
+      })
+    })
+  }
+
+  // Make new token
+  const newTokenData = {
+    sub: decodedToken.payload.sub,
+    exp: decodedToken.payload.exp,
+    email: decodedToken.payload.email,
+    "app_metadata": {
+      ...decodedToken.payload.app_metadata,
+      "authorization": {
+        "roles": ["admin", "editor"]
+      }
+    },
+    user_metadata: decodedToken.payload.user_metadata
+  }
+  const yourSuperSecret = 'secret'
+  const newToken = jwt.sign(newTokenData, yourSuperSecret)
+
+  /* Return this instead of redirect for debugging
+  return callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({
+      event: event,
+      context: context,
+      cookies: cookies,
+      decodedToken: decodedToken,
+      newToken: newToken,
+      clientContext: context.clientContext,
+      urlData: urlData
+    })
+  })
+  /**/
+
+  // Do redirect
+  const r = `${redirectBaseUrl}/.netlify/functions/set-cookie?token=${newToken}&url=${redirectUrl}`
+  console.log('Ping next function', r)
   return callback(null, {
     statusCode: 302,
     headers: {
-      Location: `${siteUrl}?site=${redirectUrl}`,
+      Location: r,
       'Cache-Control': 'no-cache'
     }
   })
