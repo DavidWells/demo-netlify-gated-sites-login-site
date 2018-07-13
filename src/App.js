@@ -82,7 +82,8 @@ export default class App extends Component {
         })
         .then(data => {
           console.log('okta data', data)
-          // then reload page
+          // reload page
+          // window.location.href = window.location.href
         })
 
         return false;

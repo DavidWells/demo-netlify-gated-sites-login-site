@@ -37,9 +37,9 @@ exports.handler = (event, context, callback) => {
 	  }
 
     // Okta session active. Make them a netlify nf_jwt Token
-    var d = new Date(data.expiresAt);
+    var date = new Date(data.expiresAt);
 
-    var calculatedExpiresIn = (da.getTime() / 1000)
+    var calculatedExpiresIn = (date.getTime() / 1000)
     console.log('calculatedExpiresIn', calculatedExpiresIn)
     // Make new netlify token
     const netlifyTokenData = {
@@ -59,7 +59,7 @@ exports.handler = (event, context, callback) => {
       secure: true,
       httpOnly: true,
       path: "/",
-      expires: d,
+      expires: date,
       domain: urlData.hostname
     })
 
