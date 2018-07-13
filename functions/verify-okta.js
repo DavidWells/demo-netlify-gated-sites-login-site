@@ -58,7 +58,8 @@ exports.handler = (event, context, callback) => {
       secure: true,
       httpOnly: true,
       path: "/",
-      expires: d
+      expires: d,
+      domain: process.env.URL
     })
 
     console.log('nf_jwtCookie', nf_jwtCookie)
