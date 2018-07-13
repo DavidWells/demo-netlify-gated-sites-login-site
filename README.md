@@ -19,4 +19,13 @@ These are the sites that are protected
 
 ## How does it work?
 
-We are using a combination of Netlify functions and Netlify _redirects.
+We are using a combination of Netlify functions and Netlify `_redirects`.
+
+
+## Setting up Okta
+
+// https://stackoverflow.com/questions/46333510/okta-sign-in-widget-mfa
+
+// Then create API token https://dev-652264-admin.oktapreview.com/admin/access/api/tokens
+
+// Then add netlify env vars
