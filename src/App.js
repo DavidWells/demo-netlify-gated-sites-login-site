@@ -137,7 +137,7 @@ export default class App extends Component {
 }
 
 function doRedirect(url, token) {
-  window.location.href = `/.netlify/functions/handle-login?url=${url}&token=${token}`
+  window.location.href = `/.netlify/functions/do-login?url=${url}&token=${token}`
 }
 
 function removeCookie(url) {

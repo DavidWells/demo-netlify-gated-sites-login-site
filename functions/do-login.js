@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import jwt from 'jsonwebtoken'
 import cookie from 'cookie'
 import parseURL from 'url-parse'
@@ -6,7 +5,7 @@ import parseURL from 'url-parse'
 exports.handler = (event, context, callback) => {
   const siteUrl = process.env.URL
   const params = event.queryStringParameters
-  const urlData = parseURL(params.site)
+  const urlData = parseURL(params.url)
   const redirectBaseUrl = urlData.origin
   const redirectUrl = urlData.href
 
@@ -93,44 +92,5 @@ exports.handler = (event, context, callback) => {
       Location: `${siteUrl}?site=${redirectUrl}`,
       'Cache-Control': 'no-cache'
     }
-  })
-}
-
-
-function parseJsonResponse(response) {
-  return response.json().then(json => {
-    if (!response.ok) {
-      return Promise.reject({ status: response.status, json })
-    }
-
-    return json
-  })
-}
-
-function request(apiURL, options = {}) {
-  const optionHeaders = options.headers || {}
-  const headers = {
-    "Content-Type": "application/json",
-    ...optionHeaders
-  }
-  return fetch(apiURL, { ...options, headers }).then(response => {
-    const contentType = response.headers.get("Content-Type")
-
-    if (contentType && contentType.match(/json/)) {
-      return parseJsonResponse(response)
-    }
-
-    if (!response.ok) {
-      return response.text().then(data => {
-        return Promise.reject({
-          status: response.status,
-          data: data
-        })
-      })
-    }
-
-    return response.text().then(data => {
-      data
-    })
   })
 }
