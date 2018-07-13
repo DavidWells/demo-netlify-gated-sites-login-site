@@ -57,15 +57,14 @@ export default class App extends Component {
     })
 
     // init okta
-      const oktaSignIn = new window.OktaSignIn({
+    const oktaSignIn = new window.OktaSignIn({
       baseUrl: baseURL,
       clientId: clientId,
-      redirectUri: 'https://gated-sites-demo-login-site.netlify.com/admin',
       authParams: {
-        issuer: baseURL + "/oauth2/default",
-        responseType: ['id_token'],
-        display: 'page'
-      }
+			  issuer: baseURL + "/oauth2/default",
+			  responseType: ['id_token'],
+			  display: 'page'
+			}
     });
 
     oktaSignIn.session.get((res) => {
