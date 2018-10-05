@@ -14,12 +14,15 @@ https://gated-sites-demo-login-site.netlify.com/
 
 These are the sites that are protected
 
-- [Site 1](https://gated-sites-demo-site1.netlify.com)
-- [Site 2](https://gated-sites-demo-site2.netlify.com)
+- [Site 1](https://gated-sites-demo-site1.netlify.com) [Repo](https://github.com/DavidWells/gated-sites-demo-site1)
+- [Site 2](https://gated-sites-demo-site2.netlify.com) [Repo](https://github.com/DavidWells/gated-sites-demo-site2)
+
 
 ## How does it work?
 
 We are using a combination of Netlify functions and Netlify `_redirects`.
+
+See [the okta example for more info](https://github.com/DavidWells/netlify-gated-sites/tree/master/okta)
 
 
 ## Setting up Okta
